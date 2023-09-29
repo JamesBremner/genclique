@@ -68,7 +68,7 @@ void extraEdges()
             c2++)
         {
             // loop over vertices on other clique, except numbers 0 and 1
-            for (int v = 2; v < vCliqueCount[c1]; v++)
+            for (int v = 2; v < vCliqueCount[c2]; v++)
             {
                 auto sv2 = std::to_string(c2) + "_" + std::to_string(v);
                 g.add(is, sv2);
@@ -82,15 +82,22 @@ void output()
     std::ofstream ifs("gengraph.txt");
     if (!ifs.is_open())
         throw std::runtime_error("Cannot open output");
+    ifs << "format cliques\n";
 
     auto vl = g.edgeList();
 
     // this outputs vertex names that reveal the clique each vertex belongs to
-    // for( auto& l : vl )
-    // {
-    //     ifs << "l " << g.userName(l.first)
-    //          <<" "<<g.userName(l.second)<< "\n";
-    // }
+    for( auto& l : vl )
+    {
+        ifs << "l " << g.userName(l.first)
+             <<" "<<g.userName(l.second)
+             << "\n";
+    }
+    ifs.close();
+
+    std::ofstream ifsObscure("gengraphObscure.txt");
+    if (!ifsObscure.is_open())
+        throw std::runtime_error("Cannot open output");
 
     // this outputs obscured graph construction
     std::random_shuffle(vl.begin(), vl.end());
@@ -100,7 +107,7 @@ void output()
     {
         obvertex.insert(std::make_pair(l.first, kv++));
         obvertex.insert(std::make_pair(l.second, kv++));
-        ifs << "l " << std::to_string(obvertex.find(l.first)->second)
+        ifsObscure << "l " << std::to_string(obvertex.find(l.first)->second)
             << " " << std::to_string(obvertex.find(l.second)->second) << "\n";
     }
 }
